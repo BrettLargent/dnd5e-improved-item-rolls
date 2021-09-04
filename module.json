@@ -1,0 +1,10 @@
+{
+  "name": "dnd5e-improved-item-rolls",
+  "title": "DnD5e Improved Item Rolls",
+  "description": "Replaces existing roll method for Item class.",
+  "version": "1.0.0",
+  "author": "blargent",
+  "minimumCoreVersion": "0.7.5",
+  "compatibleCoreVersion": "0.8.8",
+  "scripts": ["./index.js"]
+}
