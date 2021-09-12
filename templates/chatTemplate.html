@@ -1,0 +1,36 @@
+<div>
+  <h2>{{itemName}}</h2>
+  {{#if atkRoll}}
+  <div class="atk-result-total">
+    <div class="atk-result-roll">
+      <strong
+        >Attack Roll:
+        <span class="{{critClass}}">{{atkRoll.total}}</span></strong
+      >
+    </div>
+    <div class="atk-result-tooltip">
+      <div class="atk-result-formula">
+        <strong>{{atkRoll.formula}}</strong>
+      </div>
+      {{{atkRollTooltip}}}
+    </div>
+  </div>
+  <hr />
+  {{/if}} {{#if dmgRoll}}
+  <div class="dmg-result-row">
+    <strong>{{ damageType }}Damage:</strong>
+    <span class="atk-result-tooltip-container">
+      {{dmgRoll.total}}{{critDmgStr}}
+      <div class="atk-result-tooltip">
+        <div class="atk-result-formula">
+          <strong>{{dmgRoll.formula}}</strong>
+        </div>
+        {{{dmgRollTooltip}}}
+      </div>
+    </span>
+  </div>
+  <div class="atk-result-total atk-result-total-damage">
+    <strong>Total Damage: {{totalDamage}}</strong>
+  </div>
+  {{/if}}
+</div>

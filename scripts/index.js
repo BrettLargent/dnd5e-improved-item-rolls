@@ -1,8 +1,14 @@
-import UseImprovedItemRolls from "./improvedRolls.js";
+import UseImprovedItemRolls from "./improvedItemRolls.js";
+import injectCriticalThresholdWeaponField from "./injectCriticalThresholdWeaponField.js";
 
 Hooks.once("init", () => {
-  const useImprovedItemRolls = UseImprovedItemRolls();
+  // Adding Critical Threshold field in weapon details menu
+  injectCriticalThresholdWeaponField();
 
+  // TODO - Add hook for adding flagged attack additions like sneakAttack and divineStrikes
+
+  // Implementing ImprovedItemRolls and Configuring settings
+  const useImprovedItemRolls = UseImprovedItemRolls();
   game.settings.register("dnd5e-improved-item-rolls", "useImprovedItemRolls", {
     name: "Use Improved Item Rolls",
     hint: "Choose whether to use improved item rolls",
@@ -19,7 +25,6 @@ Hooks.once("init", () => {
       useImprovedItemRolls(value);
     },
   });
-
   useImprovedItemRolls(
     game.settings.get("dnd5e-improved-item-rolls", "useImprovedItemRolls")
   );

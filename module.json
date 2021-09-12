@@ -6,5 +6,6 @@
   "author": "blargent",
   "minimumCoreVersion": "0.7.5",
   "compatibleCoreVersion": "0.8.8",
-  "esmodules": ["./scripts/index.js"]
+  "esmodules": ["./scripts/index.js"],
+  "styles": ["./styles/chatTemplate.css"]
 }
