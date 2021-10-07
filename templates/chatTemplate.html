@@ -16,9 +16,9 @@
     </div>
   </div>
   <hr />
-  {{/if}} {{#if dmgRoll}}
+  {{/if}} {{#if dmgRows}} {{#each dmgRows as | dmgRow |}}
   <div class="dmg-result-row">
-    <strong>{{ damageType }}Damage:</strong>
+    <strong>{{ dmgType }}Damage:</strong>
     <span class="atk-result-tooltip-container">
       {{dmgRoll.total}}{{critDmgStr}}
       <div class="atk-result-tooltip">
@@ -29,6 +29,7 @@
       </div>
     </span>
   </div>
+  {{/each}}
   <div class="atk-result-total atk-result-total-damage">
     <strong>Total Damage: {{totalDamage}}</strong>
   </div>

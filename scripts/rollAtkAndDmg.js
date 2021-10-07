@@ -26,72 +26,86 @@ export default async function (item) {
   }
 
   if (item.hasDamage) {
-    const damageType = item.data.data.damage.parts[0][1];
-    chatTemplateData.damageType = damageType
-      ? damageType[0].toUpperCase() + damageType.slice(1) + " "
-      : "";
+    chatTemplateData.dmgRows = [];
+    const { mod } = item.getRollData();
+    let isFirst = true;
 
-    const promisesArray = [];
-    promisesArray.push(
-      item.rollDamage({ options: { chatMessage: false, fastForward: true } })
-    );
+    for (const itemDamagePart of itemData.damage.parts) {
+      const dmgRow = {};
+      const dmgType = itemDamagePart[1];
+      dmgRow.dmgType = dmgType
+        ? dmgType[0].toUpperCase() + dmgType.slice(1) + " "
+        : "";
 
-    if (item.isVersatile) {
-      // TODO - add versatile damage to chatTemplate output
-      promisesArray.push(
-        item.rollDamage({
-          options: { chatMessage: false, fastForward: true },
-          versatile: true,
-        })
-      );
-    }
+      if (isFirst) {
+        isFirst = false;
+        const promisesArray = [];
+        promisesArray.push(new Roll(itemDamagePart[0], { mod }).roll());
 
-    [chatTemplateData.dmgRoll, chatTemplateData.versDmgRoll] =
-      await Promise.all(promisesArray);
-    if (!chatTemplateData.dmgRoll) {
-      return;
-    }
+        if (item.isVersatile) {
+          // TODO - add versatile damage to chatTemplate output
+          promisesArray.push(
+            new Roll(itemData.damage.versatile, { mod }).roll()
+          );
+        }
 
-    if (chatTemplateData.isCrit) {
-      chatTemplateData.critDmg = 0;
-      chatTemplateData.critDmgStr = "";
-      chatTemplateData.critVersDmg = 0;
-      chatTemplateData.critVersDmgStr = "";
-      const dmgDice = chatTemplateData.dmgRoll.formula.match(_diceRegex);
-      dmgDice.forEach((die) => {
-        let [num, size] = die.split("d");
-        let dmg = num * size;
-        chatTemplateData.critDmg += dmg;
-        chatTemplateData.critDmgStr += ` + ${dmg}[crit]`;
-      });
-
-      if (chatTemplateData.versDmgRoll) {
-        const versDmgDice =
-          chatTemplateData.versDmgRoll.formula.match(diceRegex);
-        versDmgDice.forEach((die) => {
-          [num, size] = die.split("d");
-          dmg = num * size;
-          chatTemplateData.critVersDamage += dmg;
-          chatTemplateData.critVersDamageStr += ` + ${dmg}[crit]`;
-        });
+        [dmgRow.dmgRoll, dmgRow.versDmgRoll] = await Promise.all(promisesArray);
+        if (!dmgRow.dmgRoll) {
+          return;
+        }
+      } else {
+        dmgRow.dmgRoll = await new Roll(itemDamagePart[0]).roll();
       }
-    }
 
-    [chatTemplateData.dmgRollTooltip, chatTemplateData.versDmgRollTooltip] =
-      await Promise.all([
-        chatTemplateData.dmgRoll.getTooltip(),
-        chatTemplateData.versDmgRoll?.getTooltip(),
+      if (chatTemplateData.isCrit) {
+        dmgRow.critDmg = 0;
+        dmgRow.critDmgStr = "";
+        dmgRow.critVersDmg = 0;
+        dmgRow.critVersDmgStr = "";
+        const dmgDice = dmgRow.dmgRoll.formula.match(_diceRegex);
+        dmgDice.forEach((die) => {
+          let [num, size] = die.split("d");
+          let dmg = num * size;
+          dmgRow.critDmg += dmg;
+          dmgRow.critDmgStr += ` + ${dmg}[crit]`;
+        });
+
+        if (dmgRow.versDmgRoll) {
+          const versDmgDice = dmgRow.versDmgRoll.formula.match(diceRegex);
+          versDmgDice.forEach((die) => {
+            [num, size] = die.split("d");
+            dmg = num * size;
+            dmgRow.critVersDamage += dmg;
+            dmgRow.critVersDamageStr += ` + ${dmg}[crit]`;
+          });
+        }
+      }
+
+      [dmgRow.dmgRollTooltip, dmgRow.versDmgRollTooltip] = await Promise.all([
+        dmgRow.dmgRoll.getTooltip(),
+        dmgRow.versDmgRoll?.getTooltip(),
       ]);
 
-    chatTemplateData.totalDamage =
-      chatTemplateData.dmgRoll.total + (chatTemplateData.critDmg ?? 0);
+      dmgRow.totalDamage = dmgRow.dmgRoll.total + (dmgRow.critDmg ?? 0);
 
+      chatTemplateData.dmgRows.push(dmgRow);
+    }
+
+    chatTemplateData.totalDamage = chatTemplateData.dmgRows.reduce(
+      (accumulator, currentValue) => {
+        accumulator += currentValue.totalDamage;
+        return accumulator;
+      },
+      0
+    );
     const chatTemplate = await renderTemplate(
       "modules/dnd5e-improved-item-rolls/templates/chatTemplate.html",
       chatTemplateData
     );
 
-    const totalRoll = new Roll(chatTemplateData.totalDamage.toString()).roll();
+    const totalRoll = new Roll(
+      chatTemplateData.dmgRows[0].totalDamage.toString()
+    ).roll();
     totalRoll.toMessage({
       speaker: {
         alias: item.actor.data.name,
