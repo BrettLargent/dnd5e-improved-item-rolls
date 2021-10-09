@@ -20,7 +20,7 @@ Hooks.once("init", () => {
       true: "Yes",
       false: "No",
     },
-    default: true, // The default value for the setting
+    default: false, // The default value for the setting
     onChange: (value) => {
       useImprovedItemRolls(value);
     },
