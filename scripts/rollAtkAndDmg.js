@@ -17,7 +17,7 @@ export default async function (item) {
           </div>
         </div>`);
         const height = Number.parseInt(html.css("height"), 10) + 32;
-        html.find(".versatile-cb input").on("change", ({ target }) => {
+        html.find(".versatile-cb-wrapper input").on("change", ({ target }) => {
           versatileSelected = target.checked;
         });
         html.css("height", `${height}px`);
