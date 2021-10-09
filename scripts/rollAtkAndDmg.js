@@ -4,13 +4,13 @@ export default async function (item) {
   const itemData = item.data.data;
   const actor = item.actor;
   const actorData = actor.data.data;
+  const isCantrip = item.data.type === "spell" && itemData.level === 0;
   const chatTemplateData = { actor, item, itemName: item.data.name };
   let rollMode = "roll";
   // TODO - Add support to detect diff between use of Blessed Strikes, Divine Strike, Potent Spellcasting
   const canBlessedStrikes =
     actorData.classes.cleric?.levels >= 8 &&
-    (item.data.type === "weapon" ||
-      (item.data.type === "spell" && itemData.level === 0));
+    (item.data.type === "weapon" || isCantrip);
   let useBlessedStrikes = canBlessedStrikes;
   const canSneakAttack =
     actorData.classes.rogue &&
@@ -182,8 +182,6 @@ export default async function (item) {
     };
   }
 
-  console.log(chatTemplateData.atkRoll);
-
   if (item.hasDamage) {
     chatTemplateData.dmgRows = [];
     const rollData = item.getRollData();
@@ -200,9 +198,9 @@ export default async function (item) {
       ]);
     }
 
-    for (const itemDamagePart of itemDamageParts) {
+    for (let itemDamagePart of itemDamageParts) {
       const dmgRow = {};
-      const dmgType = itemDamagePart.splice(1, 1)[0];
+      const dmgType = itemDamagePart[1];
       dmgRow.dmgType = dmgType
         ? dmgType[0].toUpperCase() + dmgType.slice(1) + " "
         : "";
@@ -213,12 +211,15 @@ export default async function (item) {
         if (useVersatileDmg) {
           itemDamagePart[0] = itemData.damage.versatile;
         }
-        item._scaleCantripDamage(
-          itemDamagePart,
-          itemData.scaling.formula,
-          actorData.details.level,
-          rollData
-        );
+        if (isCantrip) {
+          itemDamagePart = [itemDamagePart[0]];
+          item._scaleCantripDamage(
+            itemDamagePart,
+            itemData.scaling.formula,
+            actorData.details.level,
+            rollData
+          );
+        }
         dmgRow.dmgRoll = await new Roll(itemDamagePart[0], {
           mod: rollData.mod,
         }).roll();
