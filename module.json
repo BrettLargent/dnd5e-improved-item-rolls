@@ -7,7 +7,7 @@
   "minimumCoreVersion": "0.7.5",
   "compatibleCoreVersion": "0.8.8",
   "esmodules": ["./scripts/index.js"],
-  "styles": ["./styles/chatTemplate.css"],
+  "styles": ["./styles/attackRollDialog.css", "./styles/chatTemplate.css"],
   "url": "https://github.com/BrettLargent/dnd5e-improved-item-rolls",
   "manifest": "https://raw.githubusercontent.com/BrettLargent/dnd5e-improved-item-rolls/main/module.json",
   "download": "https://github.com/BrettLargent/dnd5e-improved-item-rolls/archive/refs/heads/main.zip"
