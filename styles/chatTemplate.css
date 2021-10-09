@@ -24,6 +24,9 @@
 }
 
 /* ChatMessage Styling */
+.atk-ammo-row {
+  margin-bottom: 0.5rem;
+}
 .atk-result-formula {
   text-align: center;
   margin-bottom: 5px;

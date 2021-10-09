@@ -1,10 +1,14 @@
 <div>
   <h2>{{itemName}}</h2>
-  {{#if atkRoll}}
+  {{#if atkRoll}} {{#if ammo}}
+  <div class="atk-ammo-row">
+    <strong>Remaining {{ammo.data.name}}s:</strong> {{ammo.data.data.quantity}}
+  </div>
+  {{/if}}
   <div class="atk-result-total">
     <div class="atk-result-roll">
-      <strong
-        >Attack Roll:
+      <strong>
+        Attack Roll:
         <span class="{{critClass}}">{{atkRoll.total}}</span></strong
       >
     </div>
