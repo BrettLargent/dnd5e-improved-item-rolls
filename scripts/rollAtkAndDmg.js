@@ -4,8 +4,25 @@ export default async function (item) {
   const itemData = item.data.data;
   const actor = item.actor;
   const chatTemplateData = { itemName: item.data.name };
+  let versatileSelected = false;
 
   if (item.hasAttack) {
+    if (item.isVersatile) {
+      Hooks.once("renderDialog", (app, html, data) => {
+        html.find(".form-group:last-of-type").after(`
+        <div class="form-group">
+          <label>Use Versatile Damage?</label>
+          <div class="versatile-cb-wrapper">
+            <input type="checkbox" />
+          </div>
+        </div>`);
+        const height = Number.parseInt(html.css("height"), 10) + 32;
+        html.find(".versatile-cb input").on("change", ({ target }) => {
+          versatileSelected = target.checked;
+        });
+        html.css("height", `${height}px`);
+      });
+    }
     chatTemplateData.atkRoll = await item.rollAttack({ chatMessage: false });
     if (!chatTemplateData.atkRoll) {
       return;
@@ -22,6 +39,12 @@ export default async function (item) {
       chatTemplateData.critClass = "crit-success";
     } else if (dieRoll === 1) {
       chatTemplateData.critClass = "crit-failure";
+    }
+    const {
+      consume: { type, target },
+    } = itemData;
+    if (type === "ammo" && target) {
+      chatTemplateData.ammo = actor.items.get(target);
     }
   }
 
@@ -40,19 +63,10 @@ export default async function (item) {
       if (isFirst) {
         isFirst = false;
         const promisesArray = [];
-        promisesArray.push(new Roll(itemDamagePart[0], { mod }).roll());
-
-        if (item.isVersatile) {
-          // TODO - add versatile damage to chatTemplate output
-          promisesArray.push(
-            new Roll(itemData.damage.versatile, { mod }).roll()
-          );
-        }
-
-        [dmgRow.dmgRoll, dmgRow.versDmgRoll] = await Promise.all(promisesArray);
-        if (!dmgRow.dmgRoll) {
-          return;
-        }
+        const rollStr = versatileSelected
+          ? itemData.damage.versatile
+          : itemDamagePart[0];
+        dmgRow.dmgRoll = await new Roll(rollStr, { mod }).roll();
       } else {
         dmgRow.dmgRoll = await new Roll(itemDamagePart[0]).roll();
       }
@@ -69,22 +83,9 @@ export default async function (item) {
           dmgRow.critDmg += dmg;
           dmgRow.critDmgStr += ` + ${dmg}[crit]`;
         });
-
-        if (dmgRow.versDmgRoll) {
-          const versDmgDice = dmgRow.versDmgRoll.formula.match(diceRegex);
-          versDmgDice.forEach((die) => {
-            [num, size] = die.split("d");
-            dmg = num * size;
-            dmgRow.critVersDamage += dmg;
-            dmgRow.critVersDamageStr += ` + ${dmg}[crit]`;
-          });
-        }
       }
 
-      [dmgRow.dmgRollTooltip, dmgRow.versDmgRollTooltip] = await Promise.all([
-        dmgRow.dmgRoll.getTooltip(),
-        dmgRow.versDmgRoll?.getTooltip(),
-      ]);
+      dmgRow.dmgRollTooltip = await dmgRow.dmgRoll.getTooltip();
 
       dmgRow.totalDamage = dmgRow.dmgRoll.total + (dmgRow.critDmg ?? 0);
 
@@ -98,6 +99,7 @@ export default async function (item) {
       },
       0
     );
+
     const chatTemplate = await renderTemplate(
       "modules/dnd5e-improved-item-rolls/templates/chatTemplate.html",
       chatTemplateData
