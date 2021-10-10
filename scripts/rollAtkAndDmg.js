@@ -21,53 +21,49 @@ export default async function (item) {
   if (item.hasAttack) {
     if (canBlessedStrikes || canSneakAttack || item.isVersatile) {
       Hooks.once("renderDialog", (app, html, data) => {
+        html.addClass("dnd5e");
+        html.css("height", "auto");
         if (canBlessedStrikes) {
           html.find(".form-group:last-of-type").after(`
             <div class="form-group">
-              <label>Use Blessed Strikes?</label>
-              <div class="cb-wrapper">
+              <label class="checkbox">
                 <input name="blessed-strikes-cb" type="checkbox" checked />
-              </div>
+                Use Blessed Strikes?
+              </label>
             </div>`);
-          const height = Number.parseInt(html.css("height"), 10) + 32;
           html
-            .find(".cb-wrapper input[name='blessed-strikes-cb']")
+            .find("label.checkbox input[name='blessed-strikes-cb']")
             .on("change", ({ target }) => {
               useBlessedStrikes = target.checked;
             });
-          html.css("height", `${height}px`);
         }
         if (canSneakAttack) {
           html.find(".form-group:last-of-type").after(`
             <div class="form-group">
-              <label>Use Sneak Attack?</label>
-              <div class="cb-wrapper">
+              <label class="checkbox">
+                Use Sneak Attack?
                 <input name="sneak-attack-cb" type="checkbox" checked />
-              </div>
+              </label>
             </div>`);
-          const height = Number.parseInt(html.css("height"), 10) + 32;
           html
-            .find(".cb-wrapper input[name='sneak-attack-cb']")
+            .find("label.checkbox input[name='sneak-attack-cb']")
             .on("change", ({ target }) => {
               useSneakAttack = target.checked;
             });
-          html.css("height", `${height}px`);
         }
         if (item.isVersatile) {
           html.find(".form-group:last-of-type").after(`
             <div class="form-group">
-              <label>Use Versatile Damage?</label>
-              <div class="cb-wrapper">
+              <label class="checkbox">
+                Use Versatile Damage?
                 <input name="versatile-cb" type="checkbox" />
-              </div>
+              </label>
             </div>`);
-          const height = Number.parseInt(html.css("height"), 10) + 32;
           html
-            .find(".cb-wrapper input[name='versatile-cb']")
+            .find("label.checkbox input[name='versatile-cb']")
             .on("change", ({ target }) => {
               useVersatileDmg = target.checked;
             });
-          html.css("height", `${height}px`);
         }
       });
     }
@@ -95,85 +91,83 @@ export default async function (item) {
     if (type === "ammo" && target) {
       chatTemplateData.ammo = actor.items.get(target);
     }
-  } else if (item.hasSave) {
-    if (canBlessedStrikes || item.isVersatile) {
-      Hooks.once("renderDialog", (app, html, data) => {
-        html.find(".form-group").each(function (idx) {
-          if (idx > 1) {
-            return false;
-          }
-          $(this).addClass("d-none");
-        });
-        let height = Number.parseInt(html.css("height"), 10) - 59;
-        html.css("height", `${height}px`);
-
-        html.find("select[name='rollMode']").on("change", ({ target }) => {
-          rollMode = target.value || "roll";
-        });
-
-        if (canBlessedStrikes) {
-          html.find(".form-group:last-of-type").after(`
-            <div class="form-group">
-              <label>Use Blessed Strikes?</label>
-              <div class="cb-wrapper">
-                <input name="blessed-strikes-cb" type="checkbox" checked />
-              </div>
-            </div>`);
-          const height = Number.parseInt(html.css("height"), 10) + 32;
-          html
-            .find(".cb-wrapper input[name='blessed-strikes-cb']")
-            .on("change", ({ target }) => {
-              useBlessedStrikes = target.checked;
-            });
-          html.css("height", `${height}px`);
+  } else if (canBlessedStrikes || item.isVersatile) {
+    Hooks.once("renderDialog", (app, html, data) => {
+      html.addClass("dnd5e");
+      html.css("height", `auto`);
+      html.find(".form-group").each(function (idx) {
+        if (idx > 1) {
+          return false;
         }
-        if (item.isVersatile) {
-          html.find(".form-group:last-of-type").after(`
-            <div class="form-group">
-              <label>Use Versatile Damage?</label>
-              <div class="cb-wrapper">
-                <input name="versatile-cb" type="checkbox" />
-              </div>
-            </div>`);
-          height = Number.parseInt(html.css("height"), 10) + 32;
-          html
-            .find(".cb-wrapper input[name='versatile-cb']")
-            .on("change", ({ target }) => {
-              useVersatileDmg = target.checked;
-            });
-          html.css("height", `${height}px`);
-        }
+        $(this).addClass("d-none");
       });
-      const content = await renderTemplate(
-        "systems/dnd5e/templates/chat/roll-dialog.html",
-        {
-          defaultRollMode: game.settings.get("core", "rollMode"),
-          rollModes: CONFIG.Dice.rollModes,
-          chooseModifier: false,
-          abilities: CONFIG.DND5E.abilities,
-        }
-      );
-      let resolved = false;
-      await new Promise((resolve) => {
-        new Dialog({
-          title: "Cantrip Options",
-          content,
-          buttons: {
-            cast: {
-              label: "Cast",
-              callback: () => {
-                resolved = true;
-              },
+
+      html.find("select[name='rollMode']").on("change", ({ target }) => {
+        rollMode = target.value || "roll";
+      });
+
+      if (canBlessedStrikes) {
+        html.find(".form-group:last-of-type").after(`
+            <div class="form-group">
+              <label class="checkbox">
+                <input name="blessed-strikes-cb" type="checkbox" checked />
+                Use Blessed Strikes?
+              </label>
+            </div>`);
+        html
+          .find("label.checkbox input[name='blessed-strikes-cb']")
+          .on("change", ({ target }) => {
+            useBlessedStrikes = target.checked;
+          });
+      }
+      if (item.isVersatile) {
+        html.find(".form-group:last-of-type").after(`
+            <div class="form-group">
+              <label class="checkbox">
+                <input name="versatile-cb" type="checkbox" />
+                Use Versatile Damage?
+              </label>
+            </div>`);
+        html
+          .find("label.checkbox input[name='versatile-cb']")
+          .on("change", ({ target }) => {
+            useVersatileDmg = target.checked;
+          });
+      }
+    });
+    const content = await renderTemplate(
+      "systems/dnd5e/templates/chat/roll-dialog.html",
+      {
+        defaultRollMode: game.settings.get("core", "rollMode"),
+        rollModes: CONFIG.Dice.rollModes,
+        chooseModifier: false,
+        abilities: CONFIG.DND5E.abilities,
+      }
+    );
+    let resolved = false;
+    await new Promise((resolve) => {
+      new Dialog({
+        title: `${item.data.name}: Usage Configuration`,
+        content,
+        buttons: {
+          cast: {
+            icon: "<i class='fas fa-magic'></i>",
+            label: "Cast Spell",
+            callback: () => {
+              resolved = true;
             },
           },
-          default: "cast",
-          close: () => resolve(null),
-        }).render(true);
-      });
-      if (!resolved) {
-        return;
-      }
+        },
+        default: "cast",
+        close: () => resolve(null),
+      }).render(true);
+    });
+    if (!resolved) {
+      return;
     }
+  }
+
+  if (item.hasSave) {
     chatTemplateData.save = {
       ability: itemData.save.ability,
       abilityUpperCase:
@@ -199,8 +193,9 @@ export default async function (item) {
     }
 
     for (let itemDamagePart of itemDamageParts) {
+      itemDamagePart = [...itemDamagePart];
       const dmgRow = {};
-      const dmgType = itemDamagePart[1];
+      const dmgType = itemDamagePart.splice(1, 1)[0];
       dmgRow.dmgType = dmgType
         ? dmgType[0].toUpperCase() + dmgType.slice(1) + " "
         : "";
@@ -212,7 +207,6 @@ export default async function (item) {
           itemDamagePart[0] = itemData.damage.versatile;
         }
         if (isCantrip) {
-          itemDamagePart = [itemDamagePart[0]];
           item._scaleCantripDamage(
             itemDamagePart,
             itemData.scaling.formula,
