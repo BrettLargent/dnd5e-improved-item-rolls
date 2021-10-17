@@ -1,6 +1,14 @@
 <div class="chat-card" data-actor-id="{{actor.id}}" data-item-id="{{item.id}}">
+  {{#if description}}
+  <h2>
+    <details>
+      <summary>{{itemName}}</summary>
+      {{{description}}}
+    </details>
+  </h2>
+  {{else}}
   <h2>{{itemName}}</h2>
-  {{#if atkRoll}} {{#if ammo}}
+  {{/if}} {{#if atkRoll}} {{#if ammo}}
   <div class="atk-ammo-row">
     <strong>Remaining {{ammo.data.name}}s:</strong> {{ammo.data.data.quantity}}
   </div>

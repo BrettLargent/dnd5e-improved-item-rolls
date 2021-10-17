@@ -5,7 +5,12 @@ export default async function (item) {
   const actor = item.actor;
   const actorData = actor.data.data;
   const isCantrip = item.data.type === "spell" && itemData.level === 0;
-  const chatTemplateData = { actor, item, itemName: item.data.name };
+  const chatTemplateData = {
+    actor,
+    description: itemData.description.value,
+    item,
+    itemName: item.data.name,
+  };
   let rollMode = "roll";
   // TODO - Add support to detect diff between use of Blessed Strikes, Divine Strike, Potent Spellcasting
   const canBlessedStrikes =
