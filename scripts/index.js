@@ -5,8 +5,6 @@ Hooks.once("init", () => {
   // Adding Critical Threshold field in weapon details menu
   injectCriticalThresholdWeaponField();
 
-  // TODO - Add hook for adding flagged attack additions like sneakAttack and divineStrikes
-
   // Implementing ImprovedItemRolls and Configuring settings
   const useImprovedItemRolls = UseImprovedItemRolls();
   game.settings.register("dnd5e-improved-item-rolls", "useImprovedItemRolls", {

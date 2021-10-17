@@ -2,7 +2,6 @@ import rollAtkAndDmg from "./rollAtkAndDmg.js";
 
 export default function UseImprovedItemRolls() {
   const Item5eDisplayCardFn = game.dnd5e.entities.Item5e.prototype.displayCard;
-  const overriddenTypes = { spell: 1, weapon: 1 }; // TODO - Add cantrip support
 
   return function (useImprovedItemRolls) {
     if (useImprovedItemRolls) {
@@ -11,7 +10,9 @@ export default function UseImprovedItemRolls() {
       ) {
         if (
           this.type === "weapon" ||
-          (this.type === "spell" && this.data.data.level === 0)
+          (this.type === "spell" &&
+            this.data.data.level === 0 &&
+            (this.hasAttack || this.hasSave)) // TODO - Implement something like ctrl+click or context action to use normal interface
         ) {
           await rollAtkAndDmg(this);
           return;

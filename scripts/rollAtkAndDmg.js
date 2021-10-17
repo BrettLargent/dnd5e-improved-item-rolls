@@ -256,7 +256,12 @@ export default async function (item) {
     );
 
     const totalRoll = new Roll(
-      chatTemplateData.dmgRows[0].totalDamage.toString()
+      chatTemplateData.dmgRows
+        .reduce((accumulator, currentValue) => {
+          accumulator += currentValue.totalDamage;
+          return accumulator;
+        }, 0)
+        .toString()
     ).roll();
     totalRoll.toMessage(
       {
