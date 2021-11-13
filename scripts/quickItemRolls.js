@@ -1,10 +1,10 @@
 import rollAtkAndDmg from "./rollAtkAndDmg.js";
 
-export default function UseImprovedItemRolls() {
+export default function UseQuickItemRolls() {
   const Item5eDisplayCardFn = game.dnd5e.entities.Item5e.prototype.displayCard;
 
-  return function (useImprovedItemRolls) {
-    if (useImprovedItemRolls) {
+  return function (useQuickItemRolls) {
+    if (useQuickItemRolls) {
       game.dnd5e.entities.Item5e.prototype.displayCard = async function (
         ...args
       ) {

@@ -1,19 +1,15 @@
-import UseImprovedItemRolls from "./improvedItemRolls.js";
+import UseQuickItemRolls from "./quickItemRolls.js";
 import injectCriticalThresholdWeaponField from "./injectCriticalThresholdWeaponField.js";
-import injectChatControlIconContextMenu from "./injectChatControlIconContextMenu.js";
 
 Hooks.once("init", () => {
   // Adding Critical Threshold field in weapon details menu
   injectCriticalThresholdWeaponField();
 
-  // Adding context menu to quickly toggle module state
-  injectChatControlIconContextMenu();
-
-  // Implementing ImprovedItemRolls and Configuring settings
-  const useImprovedItemRolls = UseImprovedItemRolls();
-  game.settings.register("dnd5e-improved-item-rolls", "useImprovedItemRolls", {
-    name: "Use Improved Item Rolls",
-    hint: "Choose whether to use improved item rolls",
+  // Implementing QuickItemRolls and Configuring settings
+  const useQuickItemRolls = UseQuickItemRolls();
+  game.settings.register("dnd5e-quick-item-rolls", "useQuickItemRolls", {
+    name: "Use Quick Item Rolls",
+    hint: "Choose whether to use quick item rolls",
     scope: "client", // This specifies a client-stored setting
     config: true, // This specifies that the setting appears in the configuration view
     type: Boolean,
@@ -24,10 +20,10 @@ Hooks.once("init", () => {
     },
     default: false, // The default value for the setting
     onChange: (value) => {
-      useImprovedItemRolls(value);
+      useQuickItemRolls(value);
     },
   });
-  useImprovedItemRolls(
-    game.settings.get("dnd5e-improved-item-rolls", "useImprovedItemRolls")
+  useQuickItemRolls(
+    game.settings.get("dnd5e-quick-item-rolls", "useQuickItemRolls")
   );
 });

@@ -1,14 +1,20 @@
 {
-  "name": "dnd5e-improved-item-rolls",
-  "title": "DnD5e Improved Item Rolls",
+  "name": "dnd5e-quick-item-rolls",
+  "title": "DnD5e Quick Item Rolls",
   "description": "Replaces existing roll method for Item class.",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "author": "blargent",
   "minimumCoreVersion": "0.7.5",
-  "compatibleCoreVersion": "0.8.8",
+  "compatibleCoreVersion": "0.8.9",
+  "dependencies": [
+    {
+      "name": "foundry-vtt-quick-module-context-menu-settings",
+      "manifest": "https://raw.githubusercontent.com/BrettLargent/foundry-vtt-quick-module-context-menu-settings/main/module.json"
+    }
+  ],
   "esmodules": ["./scripts/index.js"],
   "styles": ["./styles/attackRollDialog.css", "./styles/chatTemplate.css"],
-  "url": "https://github.com/BrettLargent/dnd5e-improved-item-rolls",
-  "manifest": "https://raw.githubusercontent.com/BrettLargent/dnd5e-improved-item-rolls/main/module.json",
-  "download": "https://github.com/BrettLargent/dnd5e-improved-item-rolls/archive/refs/heads/main.zip"
+  "url": "https://github.com/BrettLargent/dnd5e-quick-item-rolls",
+  "manifest": "https://raw.githubusercontent.com/BrettLargent/dnd5e-quick-item-rolls/main/module.json",
+  "download": "https://github.com/BrettLargent/dnd5e-quick-item-rolls/archive/refs/heads/main.zip"
 }
