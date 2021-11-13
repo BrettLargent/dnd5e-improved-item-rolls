@@ -236,8 +236,8 @@ export default async function (item) {
           let [num, size] = die.split("d");
           let dmg = num * size;
           dmgRow.critDmg += dmg;
-          dmgRow.critDmgStr += ` + ${dmg}[crit]`;
         });
+        dmgRow.critDmgStr += ` + ${dmgRow.critDmg}[crit]`;
       }
 
       dmgRow.dmgRollTooltip = await dmgRow.dmgRoll.getTooltip();
