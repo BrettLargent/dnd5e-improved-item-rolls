@@ -1,5 +1,19 @@
 const _diceRegex = /[1-9][0-9]*d[1-9][0-9]?/g;
 
+const doubleDamageDice = (itemDamagePart) => {
+  const dmgDice = [...itemDamagePart[0].matchAll(_diceRegex)];
+  dmgDice.forEach((match) => {
+    let die = match[0];
+    const length = die.length;
+    let [num, size] = die.split("d");
+    die = `${num * 2}d${size}`;
+    itemDamagePart[0] =
+      itemDamagePart[0].slice(0, match.index) +
+      die +
+      itemDamagePart[0].slice(match.index + length);
+  });
+};
+
 export default async function (item) {
   const itemData = item.data.data;
   const actor = item.actor;
@@ -83,6 +97,10 @@ export default async function (item) {
     const critThreshold = Math.min(
       actor.data.flags.dnd5e?.weaponCriticalThreshold || 20,
       itemData.critThreshold || 20
+    );
+    chatTemplateData.usePerfectCrits = game.settings.get(
+      "dnd5e-perfect-crits",
+      "usePerfectCrits"
     );
     chatTemplateData.isCrit = dieRoll >= critThreshold;
     if (chatTemplateData.isCrit) {
@@ -219,14 +237,20 @@ export default async function (item) {
             rollData
           );
         }
+        if (chatTemplateData.isCrit && !chatTemplateData.usePerfectCrits) {
+          doubleDamageDice(itemDamagePart);
+        }
         dmgRow.dmgRoll = await new Roll(itemDamagePart[0], {
           mod: rollData.mod,
         }).roll();
       } else {
+        if (chatTemplateData.isCrit && !chatTemplateData.usePerfectCrits) {
+          doubleDamageDice(itemDamagePart);
+        }
         dmgRow.dmgRoll = await new Roll(itemDamagePart[0]).roll();
       }
 
-      if (chatTemplateData.isCrit) {
+      if (chatTemplateData.isCrit && chatTemplateData.usePerfectCrits) {
         dmgRow.critDmg = 0;
         dmgRow.critDmgStr = "";
         dmgRow.critVersDmg = 0;

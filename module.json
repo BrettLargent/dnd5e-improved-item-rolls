@@ -8,6 +8,10 @@
   "compatibleCoreVersion": "0.8.9",
   "dependencies": [
     {
+      "name": "dnd5e-perfect-crits",
+      "manifest": "https://raw.githubusercontent.com/BrettLargent/dnd5e-perfect-crits/main/module.json"
+    },
+    {
       "name": "foundry-vtt-quick-module-context-menu-settings",
       "manifest": "https://raw.githubusercontent.com/BrettLargent/foundry-vtt-quick-module-context-menu-settings/main/module.json"
     }
