@@ -279,7 +279,6 @@ export default async function (item) {
       0
     );
 
-    // TODO - Add cantrip description collapsible
     const chatTemplate = await renderTemplate(
       "modules/dnd5e-quick-item-rolls/templates/chatTemplate.html",
       chatTemplateData
