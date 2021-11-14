@@ -1,10 +1,6 @@
 import UseQuickItemRolls from "./quickItemRolls.js";
-import injectCriticalThresholdWeaponField from "./injectCriticalThresholdWeaponField.js";
 
 Hooks.once("init", () => {
-  // Adding Critical Threshold field in weapon details menu
-  injectCriticalThresholdWeaponField();
-
   // Implementing QuickItemRolls and Configuring settings
   const useQuickItemRolls = UseQuickItemRolls();
   game.settings.register("dnd5e-quick-item-rolls", "useQuickItemRolls", {

@@ -96,7 +96,7 @@ export default async function (item) {
     const dieRoll = chatTemplateData.atkRoll.dice[0].total;
     const critThreshold = Math.min(
       actor.data.flags.dnd5e?.weaponCriticalThreshold || 20,
-      itemData.critThreshold || 20
+      itemData.critical.threshold || 20
     );
     chatTemplateData.usePerfectCrits = game.settings.get(
       "dnd5e-perfect-crits",
