@@ -45,9 +45,9 @@ This module can be enabled/disabled as usual on a user-by-user basis under `Conf
 
 - DnD5e Perfect Crits
 
-  - manifest: https://raw.githubusercontent.com/BrettLargent/dnd5e-perfect-crits/main/module.json
-  - url: https://github.com/BrettLargent/dnd5e-perfect-crits
+  - manifest: https://raw.githubusercontent.com/Erebus-FoundryVTT-Modules/dnd5e-perfect-crits/main/module.json
+  - url: https://github.com/Erebus-FoundryVTT-Modules/dnd5e-perfect-crits
 
 - Foundry VTT Quick Module Context Menu Settings
-  - manifest: https://raw.githubusercontent.com/BrettLargent/foundry-vtt-quick-module-context-menu-settings/main/module.json
-  - url: https://github.com/BrettLargent/foundry-vtt-quick-module-context-menu-settings
+  - manifest: https://raw.githubusercontent.com/Erebus-FoundryVTT-Modules/foundry-vtt-quick-module-context-menu-settings/main/module.json
+  - url: https://github.com/Erebus-FoundryVTT-Modules/foundry-vtt-quick-module-context-menu-settings
