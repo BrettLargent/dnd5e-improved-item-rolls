@@ -5,7 +5,7 @@
   "version": "1.1.0",
   "author": "blargent",
   "minimumCoreVersion": "0.7.5",
-  "compatibleCoreVersion": "0.8.9",
+  "compatibleCoreVersion": "9.245",
   "dependencies": [
     {
       "name": "dnd5e-perfect-crits",
